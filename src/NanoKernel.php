@@ -33,7 +33,7 @@ class NanoKernel
     protected bool $booted = false;
     protected bool $debug;
     protected string $environment;
-    protected ?string $projectDir;
+    protected ?string $projectDir = null;
     private ContainerInterface $container;
 
     /**
@@ -188,7 +188,7 @@ class NanoKernel
     {
     }
 
-    protected function getConfigDir(): string
+    public function getConfigDir(): string
     {
         return $this->getProjectDir().'/config';
     }
