@@ -1,0 +1,26 @@
+{
+    "name": "nyholm/nano-kernel",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nyholm",
+            "email": "tobias.nyholm@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">7.4",
+        "symfony/config": "^5.3",
+        "symfony/dependency-injection": "^5.3"
+    },
+        "autoload": {
+        "psr-4": {
+            "Nyholm\\NanoKernel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nyholm\\NanoKernel\\": "tests/"
+        }
+    }
+}
