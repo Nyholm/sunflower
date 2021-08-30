@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Nyholm\NanoKernel;
 
 use Bref\Event\Handler as BrefHandler;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\Builder\ConfigBuilderGenerator;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -65,6 +64,10 @@ class NanoKernel
     {
         if ($this->booted) {
             return;
+        }
+
+        if (!file_exists($this->getCacheDir())) {
+            mkdir($this->getCacheDir(), 0777, true);
         }
 
         $this->initializeBundles();
