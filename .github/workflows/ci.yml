@@ -1,0 +1,31 @@
+name: Tests
+on: [ pull_request ]
+
+jobs:
+  phpunit:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: [ '7.4', '8.0' ]
+        sf_version: [ '5.3.*' ]
+
+    steps:
+      - name: Set up PHP
+        uses: shivammathur/setup-php@2.7.0
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: flex
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download dependencies
+        env:
+          SYMFONY_REQUIRE: ${{ matrix.sf_version }}
+        uses: ramsey/composer-install@v1
+
+      - name: Run tests
+        run: ./vendor/bin/simple-phpunit
