@@ -1,0 +1,11 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    Example1\App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Kernel.php}'
