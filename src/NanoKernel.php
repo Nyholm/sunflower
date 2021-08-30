@@ -20,6 +20,8 @@ use Symfony\Component\DependencyInjection\Loader\GlobFileLoader;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader as ContainerPhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
 
 /**
  * A super tiny kernel that only warms up a Symfony container for you.
@@ -34,6 +36,11 @@ class NanoKernel
     protected ?string $projectDir;
     private ContainerInterface $container;
 
+    /**
+     * @var BundleInterface[]
+     */
+    protected $bundles = [];
+
     public function __construct(string $env, bool $debug = false)
     {
         $this->debug = $debug;
@@ -46,7 +53,7 @@ class NanoKernel
         $container->import('../config/{packages}/'.$this->environment.'/*.yaml');
         $container->import('../config/{packages}/'.$this->environment.'/*.php');
 
-        if (\is_file(\dirname(__DIR__).'/config/services.yaml')) {
+        if (\is_file($this->getConfigDir().'/services.yaml')) {
             $container->import('../config/services.yaml');
             $container->import('../config/{services}_'.$this->environment.'.yaml');
         } else {
@@ -60,6 +67,8 @@ class NanoKernel
             return;
         }
 
+        $this->initializeBundles();
+
         $containerDumpFile = $this->getCacheDir().'/container.php';
         if ($this->debug || !\file_exists($containerDumpFile)) {
             $this->buildContainer($containerDumpFile);
@@ -67,7 +76,37 @@ class NanoKernel
 
         require_once $containerDumpFile;
         $this->container = new \CachedContainer();
+
+        foreach ($this->bundles as $bundle) {
+            $bundle->setContainer($this->container);
+            $bundle->boot();
+        }
+
         $this->booted = true;
+    }
+
+    /**
+     * Read config/bundles.php and initialize bundles.
+     */
+    protected function initializeBundles(): void
+    {
+        $this->bundles = [];
+        $bundleConfigFile = $this->getConfigDir().'/bundles.php';
+        if (!file_exists($bundleConfigFile)) {
+            return;
+        }
+
+        $contents = require $bundleConfigFile;
+        foreach ($contents as $class => $envs) {
+            if ($envs[$this->environment] ?? $envs['all'] ?? false) {
+                $bundle = new $class();
+                $name = $bundle->getName();
+                if (isset($this->bundles[$name])) {
+                    throw new \LogicException(sprintf('Trying to register two bundles with the same name "%s".', $name));
+                }
+                $this->bundles[$name] = $bundle;
+            }
+        }
     }
 
     /**
@@ -140,6 +179,15 @@ class NanoKernel
         return $this->projectDir;
     }
 
+    /**
+     * The extension point similar to the Bundle::build() method.
+     *
+     * Use this method to register compiler passes and manipulate the container during the building process.
+     */
+    protected function build(ContainerBuilder $container)
+    {
+    }
+
     protected function getConfigDir(): string
     {
         return $this->getProjectDir().'/config';
@@ -166,9 +214,38 @@ class NanoKernel
         /** @var ContainerPhpFileLoader $kernelLoader */
         $kernelLoader = $loader->getResolver()->resolve($file = $configureContainer->getFileName());
         $kernelLoader->setCurrentDir(\dirname($file));
-        $instanceof = &\Closure::bind(function &() { return $this->instanceof; }, $kernelLoader, $kernelLoader)();
+        $instanceof = &\Closure::bind(function &() {
+            return $this->instanceof;
+        }, $kernelLoader, $kernelLoader)();
 
         $this->configureContainer(new ContainerConfigurator($container, $kernelLoader, $instanceof, $file, $file, $this->environment));
+
+        $extensions = [];
+        foreach ($this->bundles as $bundle) {
+            if ($extension = $bundle->getContainerExtension()) {
+                $container->registerExtension($extension);
+            }
+
+            if ($this->debug) {
+                $container->addObjectResource($bundle);
+            }
+        }
+
+        foreach ($this->bundles as $bundle) {
+            $bundle->build($container);
+        }
+
+        $this->build($container);
+
+        foreach ($container->getExtensions() as $extension) {
+            $extensions[] = $extension->getAlias();
+        }
+
+        if ([] !== $extensions) {
+            // ensure these extensions are implicitly loaded
+            $container->getCompilerPassConfig()->setMergePass(new MergeExtensionConfigurationPass($extensions));
+        }
+
         $container->compile();
 
         //dump the container

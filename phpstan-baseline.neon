@@ -6,6 +6,11 @@ parameters:
 			path: src/NanoKernel.php
 
 		-
+			message: "#^Parameter \\#1 \\$container of method Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:\\:setContainer\\(\\) expects Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null, CachedContainer given\\.$#"
+			count: 1
+			path: src/NanoKernel.php
+
+		-
 			message: "#^Property Nyholm\\\\NanoKernel\\\\NanoKernel\\:\\:\\$container \\(Psr\\\\Container\\\\ContainerInterface\\) does not accept CachedContainer\\.$#"
 			count: 1
 			path: src/NanoKernel.php
