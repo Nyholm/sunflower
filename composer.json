@@ -23,7 +23,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Nyholm\\NanoKernel\\": "tests/"
+            "Nyholm\\NanoKernel\\Tests\\": "tests/"
         }
     }
 }

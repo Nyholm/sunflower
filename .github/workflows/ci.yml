@@ -28,4 +28,4 @@ jobs:
         uses: ramsey/composer-install@v1
 
       - name: Run tests
-        run: ./vendor/bin/simple-phpunit
+        run: ./vendor/bin/phpunit
