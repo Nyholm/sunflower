@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": ">7.4",
+        "php": ">=7.4",
         "symfony/config": "^5.3 || ^6.0",
         "symfony/dependency-injection": "^5.3 || ^6.0"
     },
@@ -29,5 +29,7 @@
             "Nyholm\\NanoKernel\\Tests\\": "tests/",
             "Example1\\App\\": "tests/Resources/example1/src"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
