@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\Loader\GlobFileLoader;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader as ContainerPhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * A super tiny kernel that only warms up a Symfony container for you.
@@ -33,6 +34,11 @@ class NanoKernel
     protected string $environment;
     protected ?string $projectDir;
     private ContainerInterface $container;
+
+    /**
+     * @var BundleInterface[]
+     */
+    protected $bundles = [];
 
     public function __construct(string $env, bool $debug = false)
     {
@@ -67,7 +73,36 @@ class NanoKernel
 
         require_once $containerDumpFile;
         $this->container = new \CachedContainer();
+
+        foreach ($this->registerBundles() as $bundle) {
+            $bundle->setContainer($this->container);
+            $bundle->boot();
+        }
+
         $this->booted = true;
+    }
+
+    protected function registerBundles(): iterable
+    {
+        $this->bundles = [];
+        $bundleConfigFile = $this->getConfigDir() . '/bundles.php';
+        if (!file_exists($bundleConfigFile)) {
+            return [];
+        }
+
+        $contents = require $bundleConfigFile;
+        foreach ($contents as $class => $envs) {
+            if ($envs[$this->environment] ?? $envs['all'] ?? false) {
+                $bundle = new $class();
+                $name = $bundle->getName();
+                if (isset($this->bundles[$name])) {
+                    throw new \LogicException(sprintf('Trying to register two bundles with the same name "%s".', $name));
+                }
+                $this->bundles[$name] = $bundle;
+
+                yield $bundle;
+            }
+        }
     }
 
     /**
