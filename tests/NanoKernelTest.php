@@ -10,6 +10,13 @@ use PHPUnit\Framework\TestCase;
 
 class NanoKernelTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        include_once __DIR__.'/Resources/app/src/Kernel.php';
+    }
+
     public function testCanBeInitialized()
     {
         $kernel = new NanoKernel('dev', true);
@@ -37,7 +44,6 @@ class NanoKernelTest extends TestCase
 
     public function testGetProject()
     {
-        include_once __DIR__.'/Resources/app/src/Kernel.php';
         $kernel = new Kernel('dev', true);
         $this->assertSame(__DIR__.'/Resources/app', $kernel->getProjectDir());
     }
