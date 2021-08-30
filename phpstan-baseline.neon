@@ -1,0 +1,12 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Instantiated class CachedContainer not found\\.$#"
+			count: 1
+			path: src/NanoKernel.php
+
+		-
+			message: "#^Property Nyholm\\\\NanoKernel\\\\NanoKernel\\:\\:\\$container \\(Psr\\\\Container\\\\ContainerInterface\\) does not accept CachedContainer\\.$#"
+			count: 1
+			path: src/NanoKernel.php
+
