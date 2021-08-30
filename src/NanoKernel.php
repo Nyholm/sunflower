@@ -7,7 +7,6 @@ namespace Nyholm\NanoKernel;
 use Bref\Event\Handler as BrefHandler;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\Builder\ConfigBuilderGenerator;
-use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
@@ -18,10 +17,8 @@ use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Loader\DirectoryLoader;
 use Symfony\Component\DependencyInjection\Loader\GlobFileLoader;
-use Symfony\Component\DependencyInjection\Loader\IniFileLoader;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader as ContainerPhpFileLoader;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
@@ -34,7 +31,7 @@ class NanoKernel
     protected bool $booted = false;
     protected bool $debug;
     protected string $environment;
-    protected string $projectDir;
+    protected ?string $projectDir;
     private ContainerInterface $container;
 
     public function __construct(string $env, bool $debug = false)
@@ -43,7 +40,7 @@ class NanoKernel
         $this->environment = $env;
     }
 
-   protected function configureContainer(ContainerConfigurator $container): void
+    protected function configureContainer(ContainerConfigurator $container): void
     {
         $container->import('../config/{packages}/*.yaml');
         $container->import('../config/{packages}/'.$this->environment.'/*.yaml');
@@ -145,7 +142,7 @@ class NanoKernel
 
     protected function getConfigDir(): string
     {
-        return $this->getProjectDir() . '/config';
+        return $this->getProjectDir().'/config';
     }
 
     private function buildContainer(string $containerDumpFile): void
@@ -166,7 +163,7 @@ class NanoKernel
         $configureContainer = new \ReflectionObject($this);
         $loader = $this->getContainerLoader($container);
 
-        /* @var ContainerPhpFileLoader $kernelLoader */
+        /** @var ContainerPhpFileLoader $kernelLoader */
         $kernelLoader = $loader->getResolver()->resolve($file = $configureContainer->getFileName());
         $kernelLoader->setCurrentDir(\dirname($file));
         $instanceof = &\Closure::bind(function &() { return $this->instanceof; }, $kernelLoader, $kernelLoader)();
