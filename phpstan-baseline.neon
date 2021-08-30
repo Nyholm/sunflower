@@ -11,7 +11,7 @@ parameters:
 			path: src/NanoKernel.php
 
 		-
-			message: "#^Property Nyholm\\\\NanoKernel\\\\NanoKernel\\:\\:\\$container \\(Psr\\\\Container\\\\ContainerInterface\\) does not accept CachedContainer\\.$#"
+			message: "#^Property Nyholm\\\\NanoKernel\\\\NanoKernel\\:\\:\\$container \\(Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\) does not accept CachedContainer\\.$#"
 			count: 1
 			path: src/NanoKernel.php
 
