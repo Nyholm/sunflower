@@ -86,6 +86,8 @@ This works perfectly with Symfony 5.3+ and the Runtime component. Read more at
 https://github.com/php-runtime/bref
 
 ```php
+// src/Kernel.php
+
 namespace App;
 
 use Nyholm\SunflowerKernel;
@@ -137,7 +139,7 @@ return function (array $context) {
 ```
 
 ```yaml
-// config/service.yaml
+# config/services.yaml
 
 services:
     _defaults:
