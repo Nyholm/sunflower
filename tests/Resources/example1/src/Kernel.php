@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Example1\App;
 
-use Nyholm\NanoKernel\NanoKernel;
+use Nyholm\SunflowerKernel;
 
-class Kernel extends NanoKernel
+class Kernel extends SunflowerKernel
 {
 }

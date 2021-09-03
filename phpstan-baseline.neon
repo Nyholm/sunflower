@@ -3,15 +3,15 @@ parameters:
 		-
 			message: "#^Instantiated class CachedContainer not found\\.$#"
 			count: 1
-			path: src/NanoKernel.php
+			path: src/SunflowerKernel.php
 
 		-
 			message: "#^Parameter \\#1 \\$container of method Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:\\:setContainer\\(\\) expects Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null, CachedContainer given\\.$#"
 			count: 1
-			path: src/NanoKernel.php
+			path: src/SunflowerKernel.php
 
 		-
-			message: "#^Property Nyholm\\\\NanoKernel\\\\NanoKernel\\:\\:\\$container \\(Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\) does not accept CachedContainer\\.$#"
+			message: "#^Property Nyholm\\\\SunflowerKernel\\:\\:\\$container \\(Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\) does not accept CachedContainer\\.$#"
 			count: 1
-			path: src/NanoKernel.php
+			path: src/SunflowerKernel.php
 

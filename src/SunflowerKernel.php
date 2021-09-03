@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Nyholm\NanoKernel;
+namespace Nyholm;
 
-use Bref\Event\Handler as BrefHandler;
 use Symfony\Component\Config\Builder\ConfigBuilderGenerator;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
@@ -27,7 +26,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfiguration
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class NanoKernel
+class SunflowerKernel
 {
     protected bool $booted = false;
     protected bool $debug;
@@ -204,12 +203,6 @@ class NanoKernel
         $container->setParameter('kernel.log_dir', $this->getLogDir());
         $container->setParameter('kernel.environment', $this->environment);
         $container->setParameter('kernel.debug', $this->debug);
-
-        // If bref/bref is installed
-        if (interface_exists(BrefHandler::class)) {
-            $container->registerForAutoconfiguration(BrefHandler::class)
-                ->setPublic(true);
-        }
 
         $configureContainer = new \ReflectionObject($this);
         $loader = $this->getContainerLoader($container);

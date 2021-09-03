@@ -1,8 +1,8 @@
-# Symfony nano kernel
+# Sunflower
 
-This is a super small kernel that is used to build a dependency injection
-container. This kernel is useful for microservices and applications that dont
-use HTTP. Say; reading from a queue or application invoked by AWS Lambda.
+Sunflower is a super small application kernel that is used to build a dependency
+injection container. This kernel is useful for microservices and applications that
+dont use HTTP. Say; reading from a queue or application invoked by AWS Lambda.
 
 With this kernel you can use normal Symfony service definition with auto wiring
 and all!
@@ -11,7 +11,9 @@ and all!
 // src/Kernel.php
 namespace App;
 
-class Kernel extends NanoKernel
+use Nyholm\SunflowerKernel;
+
+class Kernel extends SunflowerKernel
 {
    /**
     * Optionally override the configureContainer()
@@ -52,9 +54,9 @@ https://github.com/php-runtime/bref
 ```php
 namespace App;
 
-use Nyholm\NanoKernel\NanoKernel;
+use Nyholm\SunflowerKernel;
 
-class Kernel extends NanoKernel
+class Kernel extends SunflowerKernel
 {
     public function isLambda(): bool
     {

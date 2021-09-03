@@ -1,5 +1,5 @@
 {
-    "name": "nyholm/nano-kernel",
+    "name": "nyholm/sunflower",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -21,12 +21,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Nyholm\\NanoKernel\\": "src/"
+            "Nyholm\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Nyholm\\NanoKernel\\Tests\\": "tests/",
+            "Nyholm\\Sunflower\\Tests\\": "tests/",
             "Example1\\App\\": "tests/Resources/example1/src"
         }
     },
