@@ -7,6 +7,14 @@ dont use HTTP. Say; reading from a queue or application invoked by AWS Lambda.
 With this kernel you can use normal Symfony service definition with auto wiring
 and all!
 
+## Install
+
+```
+composer require nyholm/sunflower
+```
+
+## Use
+
 ```php
 // src/Kernel.php
 namespace App;
@@ -35,7 +43,6 @@ class Kernel extends SunflowerKernel
 ```
 
 ```php
-// bin/container.php
 
 use App\Kernel;
 use App\Service\MyService;
@@ -89,6 +96,8 @@ class Kernel extends SunflowerKernel
 ```
 
 ```php
+// bin/container.php
+
 use App\Kernel;
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
