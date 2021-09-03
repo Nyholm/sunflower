@@ -1,8 +1,8 @@
-# Symfony nano kernel
+# Sunflower
 
-This is a super small kernel that is used to build a dependency injection
-container. This kernel is useful for microservices and applications that dont
-use HTTP. Say; reading from a queue or application invoked by AWS Lambda.
+Sunflower is a super small application kernel that is used to build a dependency
+injection container. This kernel is useful for microservices and applications that
+dont use HTTP. Say; reading from a queue or application invoked by AWS Lambda.
 
 With this kernel you can use normal Symfony service definition with auto wiring
 and all!

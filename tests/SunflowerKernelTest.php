@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Nyholm\NanoKernel\Tests;
+namespace Nyholm\Sumflower\Tests;
 
 use Example1\App\Kernel;
 use Example1\App\Service\MyService;
-use Nyholm\NanoKernel\NanoKernel;
+use Nyholm\SunflowerKernel;
 use PHPUnit\Framework\TestCase;
 
-class NanoKernelTest extends TestCase
+class SunflowerKernelTest extends TestCase
 {
     public function testCanBeInitialized()
     {
-        $kernel = new NanoKernel('dev', true);
-        $this->assertInstanceOf(NanoKernel::class, $kernel);
-        $kernel = new NanoKernel('dev', false);
-        $this->assertInstanceOf(NanoKernel::class, $kernel);
-        $kernel = new NanoKernel('prod', false);
-        $this->assertInstanceOf(NanoKernel::class, $kernel);
+        $kernel = new SunflowerKernel('dev', true);
+        $this->assertInstanceOf(SunflowerKernel::class, $kernel);
+        $kernel = new SunflowerKernel('dev', false);
+        $this->assertInstanceOf(SunflowerKernel::class, $kernel);
+        $kernel = new SunflowerKernel('prod', false);
+        $this->assertInstanceOf(SunflowerKernel::class, $kernel);
     }
 
     public function testGetters()
     {
-        $kernel = new class('dev', true) extends NanoKernel {
+        $kernel = new class('dev', true) extends SunflowerKernel {
             public function getProjectDir(): string
             {
                 return 'project-dir';
