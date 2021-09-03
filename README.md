@@ -7,6 +7,28 @@ dont use HTTP. Say; reading from a queue or application invoked by AWS Lambda.
 With this kernel you can use normal Symfony service definition with auto wiring
 and all!
 
+## Performance
+
+Below is a table of comparisons using a "hello world" application.
+
+| Name                | Requests/second |
+|---------------------|-----------------|
+| Sunflower           | 2548
+| Symfony 6.0         | 1819
+| Symfony 5.4         | 1804
+| Slim 4              | 1380
+| Mezzio 3            | 985
+| Laravel 8           | 421
+
+Using "hello world" is has some drawback. It does show performance for small applications
+with only a few hundreds lines of code, but it does not tell how large applications
+preform. It also does not give you any indication how fast you can write and maintain
+your application.
+
+The table above is interesting if you are planning to build a small microservice
+that are similar to "hello world". Using the Sunflower Kernel is also very interesting
+if you are familiar with Symfony dependency injections, config and third party bundles.
+
 ## Install
 
 ```
