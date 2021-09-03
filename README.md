@@ -139,7 +139,7 @@ return function (array $context) {
 ```
 
 ```yaml
-// config/services.yaml
+# config/services.yaml
 
 services:
     _defaults:
