@@ -53,6 +53,33 @@ $kernel =  new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
 $kernel->getContainer()->get(MyService::class)->handle();
 ```
 
+## Use with HTTP
+
+```php
+
+use Nyholm\Psr7;
+
+require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
+
+return function (array $context) {
+    $kernel =  new \App\Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+    $container = $kernel->getContainer();
+
+    // This is an example router
+    $urlPath = $context['REQUEST_URI'];
+    switch ($urlPath) {
+        case '/':
+        case '':
+            // This is an RequestHandlerInterface
+            return $container->get(\App\Controller\Startpage::class);
+        case '/foobar':
+            return $container->get(\App\Controller\Foobar::class);
+        default:
+            return new Psr7\Response(404, [], 'The route does not exist');
+    }
+};
+```
+
 ## Use with Bref
 
 This works perfectly with Symfony 5.3+ and the Runtime component. Read more at
@@ -107,4 +134,17 @@ return function (array $context) {
 
     return $kernel->getContainer();
 };
+```
+
+```yaml
+// config/service.yaml
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    _instanceof:
+        Bref\Event\Handler:
+            public: true
 ```
