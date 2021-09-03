@@ -11,7 +11,9 @@ and all!
 // src/Kernel.php
 namespace App;
 
-class Kernel extends NanoKernel
+use Nyholm\SunflowerKernel;
+
+class Kernel extends SunflowerKernel
 {
    /**
     * Optionally override the configureContainer()
@@ -52,9 +54,9 @@ https://github.com/php-runtime/bref
 ```php
 namespace App;
 
-use Nyholm\NanoKernel\NanoKernel;
+use Nyholm\SunflowerKernel;
 
-class Kernel extends NanoKernel
+class Kernel extends SunflowerKernel
 {
     public function isLambda(): bool
     {
