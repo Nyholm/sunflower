@@ -1,5 +1,7 @@
 {
     "name": "nyholm/sunflower",
+    "description": "The best Kernel for simple applications.",
+    "keywords": ["symfony kernel", "kernel"],
     "type": "library",
     "license": "MIT",
     "authors": [
