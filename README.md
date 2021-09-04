@@ -82,7 +82,11 @@ $kernel->getContainer()->get(MyService::class)->handle();
 
 ## Use with HTTP
 
+A short example using HTTP and a simple switch-router. This example is using
+[runtime/psr-nyholm](https://github.com/php-runtime/psr-nyholm).
+
 ```php
+// public/index.php
 
 use Nyholm\Psr7;
 
@@ -109,8 +113,9 @@ return function (array $context) {
 
 ## Use with Bref
 
-This works perfectly with Symfony 5.3+ and the Runtime component. Read more at
-https://github.com/php-runtime/bref
+To create apps that works with [Bref](https://bref.sh/) you will need the
+[runtime/bref](https://github.com/php-runtime/bref) package. Create microservices,
+SQS readers or react to S3 events etc.
 
 ```php
 // src/Kernel.php
@@ -177,3 +182,23 @@ services:
         Bref\Event\Handler:
             public: true
 ```
+
+```yaml
+ # serverless.yml
+
+ functions:
+     app:
+         handler: bin/container.php:App\Service\MyHandler
+```
+
+## History
+
+The Sunflower project was open sourced in 2021. The first version of the project
+was created in 2015. A few private applications was created around the concept of
+using Symfony's Dependency Injection component but not use the FrameworkBundle or
+HttpKernel.
+
+The first public version of the project was [SuperSlim](https://github.com/Nyholm/SuperSlim).
+That project was a opinionated framework. With some more private iterations and
+many more apps created, we finally removed all unnecessary things and ended up with
+just the one Kernel.
