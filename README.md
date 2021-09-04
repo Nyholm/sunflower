@@ -78,8 +78,8 @@ use App\Service\MyService;
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-$kernel =  new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
-$kernel->getContainer()->get(MyService::class)->handle();
+$kernel = new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+$kernel->getContainer()->get(MyService::class)->run();
 ```
 
 ## Use with HTTP
@@ -95,7 +95,7 @@ use Nyholm\Psr7;
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
 return function (array $context) {
-    $kernel =  new \App\Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+    $kernel = new \App\Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
     $container = $kernel->getContainer();
 
     // This is an example router
@@ -166,7 +166,7 @@ use App\Kernel;
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
 return function (array $context) {
-    $kernel =  new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+    $kernel = new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
 
     return $kernel->getContainer();
 };
@@ -188,9 +188,9 @@ services:
 ```yaml
  # serverless.yml
 
- functions:
-     app:
-         handler: bin/container.php:App\Service\MyHandler
+  functions:
+      app:
+          handler: bin/container.php:App\Service\MyHandler
 ```
 
 ## History
