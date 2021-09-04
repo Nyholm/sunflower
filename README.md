@@ -14,7 +14,9 @@ is that Sunflower does not use `symfony/event-dispatcher`, `symfony/console`,
 ## Performance
 
 Below is a table of requests per second using a "hello world" application with
-different frameworks.
+different frameworks. The exact number is not relevant, they depend on the machine
+the test was running. But one should consider how the numbers change between frameworks
+since all test ran on the same machine.
 
 | Framework           | Req/s |
 |---------------------|-------|
