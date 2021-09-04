@@ -193,12 +193,13 @@ services:
 
 ## History
 
-The Sunflower project was open sourced in 2021. The first version of the project
-was created in 2015. A few private applications was created around the concept of
+The Sunflower project was open sourced in 2021. The very first version of the project
+was created back in 2015. A few private applications was created around the concept of
 using Symfony's Dependency Injection component but not use the FrameworkBundle or
 HttpKernel.
 
-The first public version of the project was [SuperSlim](https://github.com/Nyholm/SuperSlim).
-That project was a opinionated framework. With some more private iterations and
-many more apps created, we finally removed all unnecessary things and ended up with
-just the one Kernel.
+The first *public* version of the project was [SuperSlim](https://github.com/Nyholm/SuperSlim).
+That version was a opinionated framework to show what the FrameworkBundle actually
+did for you behind the scenes. With some more private iterations and many more applications
+created, we finally removed all unnecessary things and ended up with just the one
+Kernel.
