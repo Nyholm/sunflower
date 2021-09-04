@@ -5,25 +5,30 @@ injection container. This kernel is useful for microservices and applications th
 dont use HTTP. Say; reading from a queue or application invoked by AWS Lambda.
 
 With this kernel you can use normal Symfony service definition with auto wiring
-and all!
+and all. It even supports Symfony bundles!
+
+The main difference from using `symfony/http-kernel` and Symfony FrameworkBundle
+is that Sunflower does not use `symfony/event-dispatcher`, `symfony/console`,
+`symfony/security`, `symfony/cache` and `symfony/router`.
 
 ## Performance
 
-Below is a table of comparisons using a "hello world" application.
+Below is a table of requests per second using a "hello world" application with
+different frameworks.
 
-| Name                | Requests/second |
-|---------------------|-----------------|
-| Sunflower           | 2548
-| Symfony 6.0         | 1819
-| Symfony 5.4         | 1804
-| Slim 4              | 1380
-| Mezzio 3            | 985
-| Laravel 8           | 421
+| Framework           | Req/s |
+|---------------------|-------|
+| Sunflower           | 2.548
+| Symfony 6.0         | 1.819
+| Symfony 5.4         | 1.804
+| Slim 4              | 1.380
+| Mezzio 3            |   985
+| Laravel 8           |   421
 
-Using "hello world" is has some drawback. It does show performance for small applications
-with only a few hundreds lines of code, but it does not tell how large applications
-preform. It also does not give you any indication how fast you can write and maintain
-your application.
+Using a "hello world" comparison has some drawbacks. It does show performance for
+small applications with only a few hundreds lines of code, but it does not tell how
+large applications preform. It also does not give you any indication how fast you
+can write and maintain your application.
 
 The table above is interesting if you are planning to build a small microservice
 that are similar to "hello world". Using the Sunflower Kernel is also very interesting
