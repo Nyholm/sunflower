@@ -210,9 +210,7 @@ class SunflowerKernel
         /** @var ContainerPhpFileLoader $kernelLoader */
         $kernelLoader = $loader->getResolver()->resolve($file = $configureContainer->getFileName());
         $kernelLoader->setCurrentDir(\dirname($file));
-        $instanceof = &\Closure::bind(function &() {
-            return $this->instanceof;
-        }, $kernelLoader, $kernelLoader)();
+        $instanceof = &\Closure::bind(function &() {return $this->instanceof; }, $kernelLoader, $kernelLoader)();
 
         $this->configureContainer(new ContainerConfigurator($container, $kernelLoader, $instanceof, $file, $file, $this->environment));
 
@@ -238,6 +236,9 @@ class SunflowerKernel
         }
 
         if ([] !== $extensions) {
+            if (!class_exists(MergeExtensionConfigurationPass::class)) {
+                throw new \RuntimeException('Package "symfony/http-kernel" is required for bundle support. Try running "composer require symfony/http-kernel".');
+            }
             // ensure these extensions are implicitly loaded
             $container->getCompilerPassConfig()->setMergePass(new MergeExtensionConfigurationPass($extensions));
         }
