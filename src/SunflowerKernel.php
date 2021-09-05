@@ -124,7 +124,7 @@ class SunflowerKernel
         return $this->projectDir;
     }
 
-    public function boot()
+    public function boot(): void
     {
         if ($this->booted) {
             return;
