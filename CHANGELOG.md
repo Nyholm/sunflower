@@ -1,5 +1,11 @@
 # Change log
 
+## 0.2.1
+
+### Fixed
+
+Put the cached container in `SunflowerKernel::buildDir()` instead of the cache dir.
+
 ## 0.2.0
 
 ### Changes
