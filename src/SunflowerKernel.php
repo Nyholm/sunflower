@@ -16,7 +16,6 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\DependencyInjection\Loader\DirectoryLoader;
 use Symfony\Component\DependencyInjection\Loader\GlobFileLoader;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader as ContainerPhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
@@ -59,19 +58,85 @@ class SunflowerKernel
         }
     }
 
-    public function boot()
+    public function getContainer(): ContainerInterface
+    {
+        if (!$this->booted) {
+            $this->boot();
+        }
+
+        return $this->container;
+    }
+
+    /**
+     * The extension point similar to the Bundle::build() method.
+     *
+     * Use this method to register compiler passes and manipulate the container
+     * during the building process.
+     */
+    protected function build(ContainerBuilder $container)
+    {
+    }
+
+    public function getCacheDir(): string
+    {
+        return $this->getProjectDir().'/var/cache/'.$this->environment;
+    }
+
+    public function getBuildDir(): string
+    {
+        return $this->getCacheDir();
+    }
+
+    public function getLogDir(): string
+    {
+        return $this->getProjectDir().'/var/log';
+    }
+
+    public function getConfigDir(): string
+    {
+        return $this->getProjectDir().'/config';
+    }
+
+    /**
+     * Gets the application root dir (path of the project's composer file).
+     *
+     * @return string The project root dir
+     */
+    public function getProjectDir(): string
+    {
+        if (null === $this->projectDir) {
+            $r = new \ReflectionObject($this);
+
+            if (!is_file($dir = $r->getFileName())) {
+                throw new \LogicException(sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
+            }
+
+            $dir = $rootDir = \dirname($dir);
+            while (!is_file($dir.'/composer.json')) {
+                if ($dir === \dirname($dir)) {
+                    return $this->projectDir = $rootDir;
+                }
+                $dir = \dirname($dir);
+            }
+            $this->projectDir = $dir;
+        }
+
+        return $this->projectDir;
+    }
+
+    public function boot(): void
     {
         if ($this->booted) {
             return;
         }
 
-        if (!file_exists($this->getCacheDir())) {
-            mkdir($this->getCacheDir(), 0777, true);
+        if (!file_exists($this->getBuildDir())) {
+            mkdir($this->getBuildDir(), 0777, true);
         }
 
         $this->initializeBundles();
 
-        $containerDumpFile = $this->getCacheDir().'/container.php';
+        $containerDumpFile = $this->getBuildDir().'/container.php';
         if ($this->debug || !\file_exists($containerDumpFile)) {
             $this->buildContainer($containerDumpFile);
         }
@@ -111,90 +176,6 @@ class SunflowerKernel
         }
     }
 
-    /**
-     * Returns a loader for the container.
-     *
-     * @return DelegatingLoader The loader
-     */
-    protected function getContainerLoader(ContainerBuilder $container): DelegatingLoader
-    {
-        $locator = new FileLocator($this->getConfigDir());
-        $resolver = new LoaderResolver([
-            new YamlFileLoader($container, $locator, $this->environment),
-            new PhpFileLoader($container, $locator, $this->environment, new ConfigBuilderGenerator($this->getBuildDir())),
-            new GlobFileLoader($container, $locator, $this->environment),
-            new DirectoryLoader($container, $locator, $this->environment),
-            new ClosureLoader($container, $this->environment),
-        ]);
-
-        return new DelegatingLoader($resolver);
-    }
-
-    public function getContainer(): ContainerInterface
-    {
-        if (!$this->booted) {
-            $this->boot();
-        }
-
-        return $this->container;
-    }
-
-    public function getCacheDir(): string
-    {
-        return $this->getProjectDir().'/var/cache/'.$this->environment;
-    }
-
-    public function getBuildDir(): string
-    {
-        return $this->getCacheDir();
-    }
-
-    public function getLogDir(): string
-    {
-        return $this->getProjectDir().'/var/log';
-    }
-
-    /**
-     * Gets the application root dir (path of the project's composer file).
-     *
-     * @return string The project root dir
-     */
-    public function getProjectDir(): string
-    {
-        if (null === $this->projectDir) {
-            $r = new \ReflectionObject($this);
-
-            if (!is_file($dir = $r->getFileName())) {
-                throw new \LogicException(sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
-            }
-
-            $dir = $rootDir = \dirname($dir);
-            while (!is_file($dir.'/composer.json')) {
-                if ($dir === \dirname($dir)) {
-                    return $this->projectDir = $rootDir;
-                }
-                $dir = \dirname($dir);
-            }
-            $this->projectDir = $dir;
-        }
-
-        return $this->projectDir;
-    }
-
-    /**
-     * The extension point similar to the Bundle::build() method.
-     *
-     * Use this method to register compiler passes and manipulate the container during the building process.
-     */
-    protected function build(ContainerBuilder $container)
-    {
-    }
-
-    public function getConfigDir(): string
-    {
-        return $this->getProjectDir().'/config';
-    }
-
     private function buildContainer(string $containerDumpFile): void
     {
         $container = new ContainerBuilder();
@@ -207,7 +188,7 @@ class SunflowerKernel
         $configureContainer = new \ReflectionObject($this);
         $loader = $this->getContainerLoader($container);
 
-        /** @var ContainerPhpFileLoader $kernelLoader */
+        /** @var PhpFileLoader $kernelLoader */
         $kernelLoader = $loader->getResolver()->resolve($file = $configureContainer->getFileName());
         $kernelLoader->setCurrentDir(\dirname($file));
         $instanceof = &\Closure::bind(function &() {return $this->instanceof; }, $kernelLoader, $kernelLoader)();
@@ -251,5 +232,24 @@ class SunflowerKernel
             $containerDumpFile,
             (new PhpDumper($container))->dump(['class' => 'CachedContainer'])
         );
+    }
+
+    /**
+     * Returns a loader for the container.
+     *
+     * @return DelegatingLoader The loader
+     */
+    protected function getContainerLoader(ContainerBuilder $container): DelegatingLoader
+    {
+        $locator = new FileLocator($this->getConfigDir());
+        $resolver = new LoaderResolver([
+            new YamlFileLoader($container, $locator, $this->environment),
+            new PhpFileLoader($container, $locator, $this->environment, new ConfigBuilderGenerator($this->getBuildDir())),
+            new GlobFileLoader($container, $locator, $this->environment),
+            new DirectoryLoader($container, $locator, $this->environment),
+            new ClosureLoader($container, $this->environment),
+        ]);
+
+        return new DelegatingLoader($resolver);
     }
 }
