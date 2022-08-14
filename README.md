@@ -193,6 +193,58 @@ services:
           handler: bin/container.php:App\Service\MyHandler
 ```
 
+
+## Use with CLI
+
+```php
+// bin/console
+#!/usr/bin/env php
+<?php
+
+use App\Kernel;
+use Symfony\Component\Console\Application;
+
+require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
+
+return function (array $context) {
+    $kernel = new Kernel($context['APP_ENV'], (bool)$context['APP_DEBUG']);
+    $container = $kernel->getContainer();
+
+    $app = new Application();
+    // Register all your commands here
+    $app->add($container->get(\App\Command\HelloCommand::class));
+
+    return $app;
+};
+```
+
+```php
+declare(strict_types=1);
+
+namespace App\Command;
+
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+#[AsCommand(name: 'app:debug:hello')]
+class HelloCommand extends Command
+{
+    protected function configure()
+    {
+        $this->setDescription('Test print hello.');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $output->writeln('Hello');
+
+        return Command::SUCCESS;
+    }
+}
+```
+
 ## History
 
 The Sunflower project was open sourced in 2021. The very first version of the project
