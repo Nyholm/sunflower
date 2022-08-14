@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.8.1@f73f2299dbc59a3e6c4d66cff4605176e728ee69">
+<files psalm-version="4.26.0@6998fabb2bf528b65777bf9941920888d23c03ac">
   <file src="src/SunflowerKernel.php">
+    <ReservedWord occurrences="1">
+      <code>$loader-&gt;getResolver()-&gt;resolve($file = $configureContainer-&gt;getFileName())</code>
+    </ReservedWord>
     <UndefinedClass occurrences="1">
       <code>\CachedContainer</code>
     </UndefinedClass>

@@ -1,12 +1,12 @@
 {
     "name": "nyholm/sunflower",
-    "type": "library",
     "description": "The best Kernel for simple applications.",
+    "license": "MIT",
+    "type": "library",
     "keywords": [
         "symfony kernel",
         "kernel"
     ],
-    "license": "MIT",
     "authors": [
         {
             "name": "Nyholm",
@@ -24,6 +24,8 @@
         "symfony/http-kernel": "^5.3 || ^6.0",
         "symfony/yaml": "^5.3"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Nyholm\\": "src/"
@@ -34,7 +36,5 @@
             "Nyholm\\Sunflower\\Tests\\": "tests/",
             "Example1\\App\\": "tests/Resources/example1/src"
         }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
