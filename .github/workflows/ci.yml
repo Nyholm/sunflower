@@ -14,10 +14,6 @@ jobs:
           - php: '7.4'
             sf_version: '5.3.*'
           - php: '8.0'
-            sf_version: '5.3.*'
-          - php: '7.4'
-            sf_version: '6.0.*'
-          - php: '8.0'
             sf_version: '6.0.*'
 
     steps:
