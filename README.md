@@ -113,6 +113,24 @@ return function (array $context) {
 };
 ```
 
+```yaml
+# config/services.yaml
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    _instanceof:
+        Psr\Http\Server\RequestHandlerInterface:
+            public: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Kernel.php'
+```
+
 ## Use with Bref
 
 To create apps that works with [Bref](https://bref.sh/) you will need the
