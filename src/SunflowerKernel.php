@@ -226,7 +226,7 @@ class SunflowerKernel
 
         $container->compile();
 
-        //dump the container
+        // dump the container
         @\mkdir(\dirname($containerDumpFile), 0777, true);
         \file_put_contents(
             $containerDumpFile,

@@ -8,15 +8,15 @@ jobs:
     strategy:
       max-parallel: 10
       matrix:
-        php: [ '8.0' ]
-        sf_version: [ '5.3.*', '6.0.*' ]
+        php: [ '8.0', '8.1', '8.2' ]
+        sf_version: [ '5.3.*', '6.0.*', '6.1.*' ]
         include:
           - php: '7.4'
             sf_version: '5.3.*'
 
     steps:
       - name: Set up PHP
-        uses: shivammathur/setup-php@2.7.0
+        uses: shivammathur/setup-php@2
         with:
           php-version: ${{ matrix.php }}
           coverage: none
