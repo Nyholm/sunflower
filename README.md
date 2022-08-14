@@ -183,6 +183,11 @@ services:
     _instanceof:
         Bref\Event\Handler:
             public: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Kernel.php'
 ```
 
 ```yaml
@@ -245,25 +250,16 @@ class HelloCommand extends Command
 }
 ```
 
-## Config
-
 ```yaml
+# config/services.yaml
+
 services:
     _defaults:
         autowire: true
         autoconfigure: true
 
     _instanceof:
-        # For CLI
         Symfony\Component\Console\Command\Command:
-            public: true
-
-        # For HTTP
-        App\Controller\MyControllerInterface:
-            public: true
-
-        # For Bref
-        Bref\Event\Handler:
             public: true
 
     App\:
